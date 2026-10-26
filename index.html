@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semprotulation, Kak Barita!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --purple:#6C4DF6; --deep:#2B1A78; --pink:#FF5FA2; --yellow:#FFD93D; --teal:#2EC4B6; --paper:#FFFBEF;
+}
+body{
+  font-family:'Poppins',sans-serif; color:#fff; min-height:100vh; padding:24px 16px 56px; overflow-x:hidden;
+  background: var(--deep); 
+}
+h1,h2,h3{font-family:'Fredoka',sans-serif;font-weight:700}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:200}
+
+
+#musicToggle {
+  position: fixed; top: 16px; right: 16px; z-index: 999;
+  background: var(--pink); border: none; border-radius: 50%;
+  width: 44px; height: 44px; color: white; cursor: pointer;
+  font-size: 1.2rem; box-shadow: 0 4px 0 #C23C7C; transition: transform 0.2s;
+  display: grid; place-items: center;
+}
+#musicToggle:hover { transform: scale(1.1); }
+#musicToggle:active { transform: translateY(4px); box-shadow: 0 0 0 #C23C7C; }
+
+.page{display:none;width:100%;max-width:880px;margin:0 auto;flex-direction:column;align-items:center;text-align:center;min-height:calc(100vh - 80px)}
+.page.active{display:flex;justify-content:center;animation:in .6s ease both}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.page h1{font-size:clamp(2rem,7vw,3.2rem);line-height:1.1;margin-bottom:10px}
+.sub{font-size:clamp(.9rem,2.6vw,1.05rem);opacity:.9;margin-bottom:30px}
+
+.back{align-self:flex-start;background:var(--yellow);color:var(--deep);border:0;border-radius:999px;padding:9px 22px;font:600 .9rem 'Fredoka',sans-serif;cursor:pointer;margin-bottom:22px;transition:transform .25s}
+.back:hover{transform:scale(1.07) rotate(-2deg)}
+.back:focus-visible,.card:focus-visible,.btn:focus-visible,.item:focus-visible,.env:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+
+
+.title-env{font-size:clamp(2.2rem,9vw,3.6rem);margin-bottom:34px;text-shadow:0 4px 0 var(--pink)}
+.env{position:relative;width:min(78vw,320px);aspect-ratio:3/2;background:var(--yellow);border-radius:8px;cursor:pointer;box-shadow:0 16px 0 rgba(0,0,0,.18);border:0;animation:float 3s ease-in-out infinite;transition:transform .3s}
+.env:hover{transform:scale(1.05) rotate(-1.5deg)}
+@keyframes float{50%{translate:0 -9px}}
+.env .front{position:absolute;inset:0;background:#FFC914;clip-path:polygon(0 100%,50% 42%,100% 100%);border-radius:8px;z-index:1}
+.env .l{position:absolute;inset:0;background:#F5B800;clip-path:polygon(0 0,52% 56%,0 100%);border-radius:8px}
+.env .r{position:absolute;inset:0;background:#FFC914;clip-path:polygon(100% 0,48% 56%,100% 100%);border-radius:8px}
+.env .flap{position:absolute;top:0;left:0;width:100%;height:60%;background:var(--teal);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .9s ease;z-index:3}
+.env .seal{position:absolute;left:50%;top:56%;width:18%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:var(--pink);border:3px solid #fff;z-index:4;display:grid;place-items:center;font-size:1.1rem;transition:opacity .4s,scale .4s}
+.env.open{animation:none}
+.env.open .flap{transform:rotateX(180deg);z-index:0}
+.env.open .seal{opacity:0;scale:.3}
+.hint{margin-top:30px;font:500 1.2rem 'Fredoka',sans-serif;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+
+
+.hero{position:relative;padding:20px 6px}
+.hero h1{font-size:clamp(2.6rem,12vw,5.2rem);line-height:1.02;background:linear-gradient(90deg,var(--yellow),var(--pink) 55%,var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 0 rgba(0,0,0,.22))}
+.hero p{font:500 clamp(1.2rem,5vw,1.8rem) 'Fredoka',sans-serif;margin-top:8px}
+.stick{position:absolute;font-size:clamp(1.8rem,7vw,2.8rem);animation:bob 3s ease-in-out infinite}
+.stick:nth-of-type(1){left:-2%;top:-14%}.stick:nth-of-type(2){right:0;top:-18%;animation-delay:.6s}
+.stick:nth-of-type(3){left:4%;bottom:-24%;animation-delay:1.2s}.stick:nth-of-type(4){right:6%;bottom:-20%;animation-delay:1.8s}
+@keyframes bob{50%{transform:translateY(-9px) rotate(6deg)}}
+.btn{margin-top:70px;background:var(--pink);color:#fff;border:0;border-radius:999px;padding:14px 34px;font:600 1.1rem 'Fredoka',sans-serif;cursor:pointer;box-shadow:0 6px 0 #C23C7C;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(5px);box-shadow:0 1px 0 #C23C7C}
+
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;width:100%;max-width:520px}
+.card{border:0;color:var(--deep);border-radius:26px;padding:26px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;font:700 1.2rem 'Fredoka',sans-serif;box-shadow:0 8px 0 rgba(0,0,0,.2);transition:transform .25s}
+.card span{font-size:2.6rem}
+.card:nth-child(1){background:var(--yellow);transform:rotate(-2deg)}
+.card:nth-child(2){background:#7DE5DA;transform:rotate(1.5deg)}
+.card:nth-child(3){background:#FF9CC4;transform:rotate(1.5deg)}
+.card:nth-child(4){background:#B8A6FF;transform:rotate(-2deg)}
+.card:hover{transform:rotate(0) scale(1.06) translateY(-4px)}
+
+
+.letter{background:var(--paper);color:var(--deep);border-radius:14px;padding:34px 30px;text-align:left;max-width:600px;box-shadow:10px 10px 0 var(--teal);transform:rotate(-1deg)}
+.photo-frame {
+  width: 100%; max-width: 220px; aspect-ratio: 3/4; 
+  background: #eaeaea; border: 8px solid #fff; border-bottom-width: 24px;
+  border-radius: 4px; margin: 0 auto 24px auto; 
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.1); overflow: hidden;
+  transform: rotate(3deg); transition: transform 0.3s;
+}
+.photo-frame:hover { transform: rotate(0deg) scale(1.05); }
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+.letter h3{font-size:1.6rem;color:var(--purple);margin-bottom:14px}
+.letter p{line-height:1.9;font-size:clamp(.92rem,2.4vw,1rem);margin-bottom:14px}
+.letter .sign{font:600 1.1rem 'Fredoka',sans-serif;color:var(--pink);text-align:right;margin:18px 0 0}
+
+
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px;width:100%}
+.tip{border-radius:22px;padding:22px 20px;text-align:left;color:var(--deep);box-shadow:0 8px 0 rgba(0,0,0,.2)}
+.tip:nth-child(1){background:var(--yellow);transform:rotate(-1.5deg)}
+.tip:nth-child(2){background:#7DE5DA;transform:rotate(1deg)}
+.tip:nth-child(3){background:#FF9CC4;transform:rotate(1.5deg)}
+.tip:nth-child(4){background:#B8A6FF;transform:rotate(-1deg)}
+.tip b{font:700 1.15rem 'Fredoka',sans-serif;display:block;margin:6px 0 6px}
+.tip span{font-size:1.8rem}
+.tip p{font-size:.92rem;line-height:1.6}
+
+
+.track{width:100%;max-width:560px;height:26px;background:rgba(255,255,255,.2);border-radius:999px;position:relative;margin:50px 0 26px}
+.fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--yellow),var(--pink));transition:width .7s cubic-bezier(.3,1.3,.5,1)}
+.rocket{position:absolute;top:-32px;left:0;font-size:2rem;transition:left .7s cubic-bezier(.3,1.3,.5,1);translate:-50% 0}
+.stage{font:600 clamp(1.1rem,4vw,1.5rem) 'Fredoka',sans-serif;min-height:3.4em;max-width:480px}
+.stage.acc{color:var(--yellow);font-size:clamp(1.6rem,6vw,2.4rem)}
+
+
+.tray{display:flex;gap:clamp(10px,3vw,24px);justify-content:center;margin-bottom:20px}
+.item{background:rgba(255,255,255,.16);border:2px dashed rgba(255,255,255,.55);border-radius:22px;width:clamp(62px,19vw,90px);aspect-ratio:1;font-size:clamp(1.9rem,8vw,2.8rem);cursor:pointer;transition:transform .25s,opacity .3s}
+.item:hover{transform:scale(1.12) rotate(6deg)}
+.item.used{opacity:.2;pointer-events:none;transform:scale(.7)}
+.bag{font-size:5rem;filter:drop-shadow(0 8px 0 rgba(0,0,0,.2))}
+.inbag{min-height:2.4rem;font-size:1.9rem;letter-spacing:4px;margin-bottom:14px}
+.msg{background:var(--paper);color:var(--deep);border-radius:20px;padding:20px 26px;max-width:560px;font:500 1.1rem/1.6 'Fredoka',sans-serif;white-space:pre-line;min-height:90px;display:grid;place-items:center;box-shadow:6px 6px 0 var(--pink)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:520px){.letter{padding:26px 20px}}
+</style>
+</head>
+<body>
+
+
+<audio id="bgMusic" loop>
+  <source src="hannah_montana.mp3" type="audio/mpeg">
+  Browser kamu tidak mendukung elemen audio.
+</audio>
+<button id="musicToggle" aria-label="Toggle Musik">🔇</button>
+
+<canvas id="confetti"></canvas>
+
+
+<div id="p-envelope" class="page active">
+  <h1 class="title-env">Ada Kejutan Nih!</h1>
+  <button class="env" id="env" aria-label="Buka amplop" onclick="openEnv()">
+    <div class="l"></div><div class="r"></div><div class="front"></div>
+    <div class="flap"></div><div class="seal">⭐</div>
+  </button>
+  <p class="hint">Tap amplopnya</p>
+</div>
+
+
+<div id="p-hello" class="page">
+  <div class="hero">
+    <span class="stick">🎓</span><span class="stick">🎉</span><span class="stick">📚</span><span class="stick">✨</span>
+    <h1>Happy<br>Semprotulation!</h1>
+    <p>Selamat ya, Kak Barita!</p>
+  </div>
+  <button class="btn" onclick="show('p-menu');boom(90)">Lihat kejutannya</button>
+</div>
+
+
+<div id="p-menu" class="page">
+  <h1>Pilih Kejutannya</h1>
+  <p class="sub">Buka satu per satu, Kak</p>
+  <div class="grid">
+    <button class="card" onclick="show('p-pesan')"><span>💌</span>Pesan</button>
+    <button class="card" onclick="show('p-ngajar')"><span>🧠</span>Cara Ngajar</button>
+    <button class="card" onclick="show('p-progres');resetProg()"><span>🚀</span>Jalan ke ACC</button>
+    <button class="card" onclick="show('p-hadiah');resetGift()"><span>🎁</span>Hadiah</button>
+  </div>
+</div>
+
+<div id="p-pesan" class="page">
+  <button class="back" onclick="show('p-menu')">&larr; Kembali</button>
+  <div class="letter">
+    <div class="photo-frame">
+      <img src="kak barita.jpeg" alt="Foto Kak Barita">
+    </div>
+    
+    <h3>Untuk Kak Barita,</h3>
+    <p>Selamat ya, Kak! Seminar proposalnya sudah terlewati. Semoga revisinya tidak banyak, masukan dari dosen penguji membangun, dan ACC datang lebih cepat dari yang dibayangkan.</p>
+    <p>Terima kasih sudah mengajar dengan cara yang fun dan tidak membosankan. Materi yang kelihatan rumit jadi masuk akal, dan kami paham, bukan sekadar hafal. Itu bukan hal kecil.</p>
+    <p>Sekarang giliran Kakak yang menempuh jalan panjangnya. Semoga skripsinya lancar, sehat terus, dan nanti sampai ke wisuda dengan senyum lebar. Semangat, Kak!</p>
+    <p class="sign">— <span id="sender"></span></p>
+  </div>
+</div>
+
+<div id="p-ngajar" class="page">
+  <button class="back" onclick="show('p-menu')">&larr; Kembali</button>
+  <h1>Cara Ngajar Kak Barita</h1>
+  <p class="sub">Kenapa kelasnya selalu terasa singkat</p>
+  <div class="tips">
+    <div class="tip"><span>😆</span><b>Fun, Anti Ngantuk</b><p>Suasana kelas seru, jadi materi berat pun terasa ringan.</p></div>
+    <div class="tip"><span>💡</span><b>Bikin Paham</b><p>Konsepnya dijelaskan sampai klik, bukan cuma disuruh hafal.</p></div>
+    <div class="tip"><span>🙋</span><b>Nanya Itu Aman</b><p>Salah jawab tidak apa-apa, kami jadi berani bertanya.</p></div>
+    <div class="tip"><span>🧩</span><b>Contoh Gampang</b><p>Materi sulit dipecah jadi contoh yang mudah dibayangkan.</p></div>
+  </div>
+</div>
+
+<div id="p-progres" class="page">
+  <button class="back" onclick="show('p-menu')">&larr; Kembali</button>
+  <h1>Jalan ke ACC</h1>
+  <p class="sub">Tap tombolnya, antar roketnya sampai tujuan</p>
+  <div class="track"><div class="fill" id="fill"></div><div class="rocket" id="rocket">🚀</div></div>
+  <p class="stage" id="stage">Siap berangkat?</p>
+  <button class="btn" id="go" style="margin-top:26px" onclick="nextStage()">Lanjut</button>
+</div>
+
+<div id="p-hadiah" class="page">
+  <button class="back" onclick="show('p-menu')">&larr; Kembali</button>
+  <h1>Paket Semangat</h1>
+  <p class="sub">Tap tiap barang untuk memasukkannya ke tas</p>
+  <div class="tray" id="tray">
+    <button class="item" data-i="0" aria-label="Kopi">☕</button>
+    <button class="item" data-i="1" aria-label="Vitamin C">🍊</button>
+    <button class="item" data-i="2" aria-label="Camilan">🍫</button>
+    <button class="item" data-i="3" aria-label="Bintang semangat">🌟</button>
+  </div>
+  <div class="bag">🎒</div>
+  <div class="inbag" id="inbag"></div>
+  <div class="msg" id="msg">Tap salah satu barang di atas...</div>
+</div>
+
+<script>
+const SENDER = "From Kelas SI-B Sok sibuk sipaling solid WKWKWK"; // ganti dengan namamu
+document.getElementById('sender').textContent = SENDER;
+
+const pages = document.querySelectorAll('.page');
+function show(id){
+  pages.forEach(p => p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+const bgm = document.getElementById('bgMusic');
+const btnMusic = document.getElementById('musicToggle');
+let isPlaying = false;
+
+function toggleMusic() {
+  if (isPlaying) {
+    bgm.pause();
+    btnMusic.textContent = '🔇';
+  } else {
+    bgm.play().catch(e => console.log("Gagal memutar:", e));
+    btnMusic.textContent = '🎵';
+  }
+  isPlaying = !isPlaying;
+}
+
+btnMusic.addEventListener('click', toggleMusic);
+bgm.addEventListener('play', () => { isPlaying = true; btnMusic.textContent = '🎵'; });
+bgm.addEventListener('pause', () => { isPlaying = false; btnMusic.textContent = '🔇'; });
+
+const cv = document.getElementById('confetti'), cx = cv.getContext('2d');
+let parts = [], raf = null;
+const COL = ['#6C4DF6','#FF5FA2','#FFD93D','#2EC4B6'];
+function fit(){ cv.width = innerWidth; cv.height = innerHeight; }
+addEventListener('resize', fit); fit();
+function boom(n = 140){
+  for(let i = 0; i < n; i++){
+    parts.push({x:innerWidth/2, y:innerHeight*.5, vx:(Math.random()-.5)*18, vy:Math.random()*-15-3,
+      s:Math.random()*8+5, c:COL[i%4], r:Math.random()*6, vr:(Math.random()-.5)*.4, l:1});
+  }
+  if(!raf) loop();
+}
+function loop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  parts.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += .35; p.vx *= .99; p.r += p.vr; p.l -= .008;
+    cx.save(); cx.globalAlpha = Math.max(p.l,0); cx.translate(p.x,p.y); cx.rotate(p.r);
+    cx.fillStyle = p.c; cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); cx.restore();
+  });
+  parts = parts.filter(p => p.l > 0 && p.y < innerHeight + 20);
+  raf = parts.length ? requestAnimationFrame(loop) : null;
+}
+
+function openEnv(){
+  const e = document.getElementById('env');
+  if(e.classList.contains('open')) return;
+  e.classList.add('open');
+  
+  bgm.play().then(() => {
+    isPlaying = true;
+    btnMusic.textContent = '🎵';
+  }).catch(err => console.log("Autoplay diblokir browser, pengguna harus klik tombol play"));
+  
+  boom(160);
+  setTimeout(() => show('p-hello'), 1100);
+}
+
+
+const stages = [
+  "Bab 1 selesai. Latar belakangnya kokoh!",
+  "Bab 2 beres. Tinjauan pustaka aman.",
+  "Bab 3 siap. Metodologinya rapi.",
+  "Presentasi dimulai. Tarik napas, Kak!",
+  "Tanya jawab dengan penguji. Pelan-pelan, pasti bisa.",
+  "ACC! Selamat, Kak Barita! 🎉"
+];
+let st = 0;
+function resetProg(){
+  st = 0;
+  document.getElementById('fill').style.width = '0';
+  document.getElementById('rocket').style.left = '0';
+  const s = document.getElementById('stage'); s.textContent = 'Siap berangkat?'; s.classList.remove('acc');
+  const g = document.getElementById('go'); g.style.display = ''; g.textContent = 'Lanjut';
+}
+function nextStage(){
+  if(st >= stages.length) return;
+  st++;
+  const pct = st / stages.length * 100;
+  document.getElementById('fill').style.width = pct + '%';
+  document.getElementById('rocket').style.left = pct + '%';
+  const s = document.getElementById('stage'); s.textContent = stages[st-1];
+  if(st === stages.length){ s.classList.add('acc'); document.getElementById('go').style.display = 'none'; boom(200); }
+}
+
+const gifts = [
+  "Kopi biar fokus pas revisi. ☕",
+  "Vitamin C supaya tetap fit sampai wisuda. 🍊",
+  "Camilan buat teman begadang ngerjain skripsi. 🍫",
+  "Dan sebongkah semangat dari kami. 🌟"
+];
+const items = document.querySelectorAll('.item');
+let packed = 0;
+function resetGift(){
+  packed = 0;
+  items.forEach(i => i.classList.remove('used'));
+  document.getElementById('inbag').textContent = '';
+  document.getElementById('msg').textContent = 'Tap salah satu barang di atas...';
+}
+items.forEach(el => el.addEventListener('click', () => {
+  if(el.classList.contains('used')) return;
+  el.classList.add('used'); packed++;
+  document.getElementById('inbag').textContent += el.textContent + ' ';
+  let t = gifts[+el.dataset.i];
+  if(packed === items.length){ t += "\n\nSemua buat Kak Barita. Semangat! 🎓"; boom(160); }
+  document.getElementById('msg').textContent = t;
+}));
+</script>
+</body>
+</html>
